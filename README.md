@@ -1,6 +1,30 @@
 # Project DevOps Deploy
 
-Bulletin board service.
+## Running the container
+
+Ensure Docker is installed and the daemon is running. Build the image (runs the built-in tests):
+
+```bash
+make docker-build
+```
+
+Run the application in a container (profile `dev`, ports 8080 and 9090):
+
+```bash
+make docker-run
+```
+
+Or run directly with Docker:
+
+```bash
+docker run --rm -p 8080:8080 -p 9090:9090 \
+  -e JAVA_OPTS="-Xms256m -Xmx512m -Dspring.profiles.active=dev" \
+  project-devops-deploy:latest
+```
+
+After startup: web UI — `http://localhost:8080/`.
+
+---
 
 > **Fork policy**: this upstream repository is read-only. We do not review or merge pull requests and we do not accept infrastructure changes (Dockerfiles, Ansible roles, CI/CD workflows, etc.). To experiment or extend the project, fork it and work inside your own repository.
 
@@ -21,7 +45,7 @@ Keep this structure in mind when running commands—backend tooling (`gradlew`, 
 Key variables are read directly by Spring Boot (see `src/main/resources/application.yml` and `application-prod.yml` for defaults):
 
 | Variable                     | Description                                                   | Default                                      |
-|------------------------------|---------------------------------------------------------------|----------------------------------------------|
+| ---------------------------- | ------------------------------------------------------------- | -------------------------------------------- |
 | `SPRING_PROFILES_ACTIVE`     | Active Spring profile (`dev`, `prod`, etc.)                   | `dev`                                        |
 | `SPRING_DATASOURCE_URL`      | JDBC URL for PostgreSQL in `prod`                             | `jdbc:postgresql://localhost:5432/bulletins` |
 | `SPRING_DATASOURCE_USERNAME` | DB username                                                   | `postgres`                                   |
@@ -57,9 +81,9 @@ All other variables supported by Spring Boot can be overridden the same way; che
     ```
 
 3. Explore the API:
-   - `GET http://localhost:8080/api/bulletins`
-   - `GET http://localhost:8080/api/bulletins?page=1&perPage=9&sort=createdAt&order=DESC&state=PUBLISHED&search=laptop`
-   - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+    - `GET http://localhost:8080/api/bulletins`
+    - `GET http://localhost:8080/api/bulletins?page=1&perPage=9&sort=createdAt&order=DESC&state=PUBLISHED&search=laptop`
+    - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 
 `/api/bulletins` accepts pagination (`page`, `perPage`), sorting (`sort`, `order`) and filters (`state`, `search`). Filters are processed via JPA Specifications so the same contract is available to the React Admin frontend.
 
@@ -91,7 +115,7 @@ All other variables supported by Spring Boot can be overridden the same way; che
 
 ### Useful commands
 
-See [Makefile](./Makefile)
+See [Makefile](./Makefile). Main targets: `make run` — backend locally, `make test` — tests, `make build` — JAR; `make docker-build` — Docker image, `make docker-run` — run container.
 
 ## Frontend
 
