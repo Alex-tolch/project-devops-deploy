@@ -1,5 +1,7 @@
 # Project DevOps Deploy
 
+[![Build, test and push image](https://github.com/Alex-tolch/project-devops-deploy/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/Alex-tolch/project-devops-deploy/actions/workflows/build-and-push.yml)
+
 ## Running the container
 
 Ensure Docker is installed and the daemon is running. Build the image (runs the built-in tests):
@@ -23,6 +25,17 @@ docker run --rm -p 8080:8080 -p 9090:9090 \
 ```
 
 After startup: web UI — `http://localhost:8080/`.
+
+### CI and image tags
+
+The [Build, test and push image](.github/workflows/build-and-push.yml) workflow runs on every `push` and `pull_request` to `main`. It installs dependencies, runs tests, builds the Docker image, and (on push to `main` only) publishes it to [GitHub Container Registry](https://ghcr.io). The default `GITHUB_TOKEN` is used for `ghcr.io` login.
+
+Image tagging:
+
+- **`latest`** — updated on each push to `main`.
+- **`<short-sha>`** — 7-character Git commit SHA
+
+Example: `ghcr.io/<owner>/<repo>:latest` or `ghcr.io/<owner>/<repo>:a1b2c3d`.
 
 ---
 
